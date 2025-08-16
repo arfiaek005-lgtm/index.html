@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>🎡 عجلة يونس: الأسماء + التحديات</title>
+<style>
+  :root{
+    --bg1:#0f1023; --bg2:#191b3a; --ink:#e9f0ff; --muted:#a8b0d6;
+    --brand:#ffdb3b; --brand2:#00f5d4; --accent:#ff7eb6; --ok:#00e676; --warn:#ffb300;
+    --glass:rgba(255,255,255,.08); --glass2:rgba(255,255,255,.14);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:0; color:var(--ink); font-family: "Cairo", Tahoma, Arial, sans-serif;
+    min-height:100vh; overflow-x:hidden;
+    background:
+      radial-gradient(60rem 60rem at 10% -10%, #2b2d6b 0%, transparent 60%),
+      radial-gradient(50rem 50rem at 110% 10%, #4a1d6e 0%, transparent 55%),
+      linear-gradient(135deg, var(--bg1), var(--bg2));
+  }
+  /* خلفية زخرفية */
+  .stars{
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.35), transparent 60%),
+      radial-gradient(1.5px 1.5px at 70% 60%, rgba(255,255,255,.25), transparent 60%),
+      radial-gradient(1.8px 1.8px at 40% 80%, rgba(255,255,255,.28), transparent 60%);
+    animation: twinkle 6s linear infinite;
+    opacity:.7;
+  }
+  @keyframes twinkle{
+    0%,100%{filter:brightness(1)}
+    50%{filter:brightness(1.5)}
+  }
+
+  header{
+    position:sticky; top:0; z-index:5;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px; background:linear-gradient(180deg, rgba(15,16,35,.9), rgba(15,16,35,.35));
+    backdrop-filter: blur(6px); border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.4px;
+  }
+  .brand .logo{
+    width:40px; height:40px; border-radius:12px;
+    background: conic-gradient(from 0deg, var(--brand), var(--accent), var(--brand2), var(--brand));
+    box-shadow: 0 0 20px rgba(255,219,59,.4), inset 0 0 12px rgba(255,255,255,.2);
+  }
+  .gear{
+    width:42px; height:42px; border-radius:12px; border:none; cursor:pointer;
+    background: var(--glass); color:var(--ink); font-size:20px;
+    display:grid; place-items:center;
+    transition: transform .15s ease, background .2s;
+  }
+  .gear:hover{ transform: rotate(-10deg); background:var(--glass2) }
+
+  main{ padding:18px; position:relative; z-index:1 }
+
+  .wrap{
+    display:grid; gap:18px;
+    grid-template-columns: 1.3fr 1fr;
+  }
+  @media (max-width: 980px){
+    .wrap{ grid-template-columns: 1fr }
+  }
+
+  /* لوحة الإدخال */
+  .panel{
+    background: var(--glass); border:1px solid rgba(255,255,255,.06);
+    border-radius:20px; padding:16px; backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  }
+  .panel h3{ margin:4px 0 10px; color:var(--brand); font-weight:800 }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+  input[type="text"], textarea, input[type="number"]{
+    background: rgba(255,255,255,.08); color:var(--ink); border:1px solid rgba(255,255,255,.12);
+    padding:10px 12px; border-radius:12px; outline:none; width:100%;
+  }
+  textarea{ min-height:84px; resize:vertical }
+
+  .btn{
+    border:none; cursor:pointer; padding:10px 14px; border-radius:12px; color:#121212; font-weight:800;
+    background: linear-gradient(180deg, var(--brand), #ffd84d);
+    box-shadow: 0 4px 14px rgba(255,219,59,.35);
+  }
+  .btn.secondary{
+    background: linear-gradient(180deg, var(--brand2), #00dcc0); color:#002b2b; box-shadow: 0 4px 14px rgba(0,245,212,.25);
+  }
+  .btn.ghost{
+    background: rgba(255,255,255,.06); color:var(--ink); border:1px solid rgba(255,255,255,.14);
+    box-shadow:none;
+  }
+  .chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px }
+  .chip{
+    padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.14); font-size:14px
+  }
+
+  /* العجلتان */
+  .stage{
+    display:grid; grid-template-columns: 1fr 1fr; gap:18px; align-items:start;
+  }
+  @media (max-width:980px){ .stage{ grid-template-columns: 1fr } }
+
+  .wheelCard{
+    background: var(--glass); border:1px solid rgba(255,255,255,.06);
+    border-radius:22px; padding:18px; text-align:center;
+  }
+  .wheelTitle{ font-weight:800; color:var(--muted); margin-bottom:10px }
+  .wheelBox{
+    position:relative; width: 320px; height:320px; margin:0 auto 12px;
+    border-radius:50%; background:
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,.08), rgba(255,255,255,.02) 60%),
+      conic-gradient(from 0deg, #2b2f55, #2f2a58, #2b2f55);
+    border:3px solid rgba(255,255,255,.18); box-shadow: 0 12px 30px rgba(0,0,0,.35), inset 0 0 30px rgba(255,255,255,.06);
+    overflow:hidden; transition: filter .2s ease;
+  }
+  .pointer{
+    position:absolute; top:-10px; left:50%; transform:translateX(-50%);
+    width:0;height:0; border-left:14px solid transparent; border-right:14px solid transparent; border-bottom:24px solid var(--brand);
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,.4));
+    z-index:3;
+  }
+  .wheel{ position:absolute; inset:0; border-radius:50%; }
+  .sector{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    transform-origin:50% 50%; font-weight:700; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.35);
+    font-size:14px; padding:0 26px; text-align:center;
+  }
+  .sector::before{
+    content:""; position:absolute; inset:0; background: conic-gradient(from var(--start) deg, rgba(255,255,255,.08), rgba(255,255,255,.02) 85%);
+    mask: radial-gradient(circle at 50% 50%, transparent 48%, black 49%);
+    border-radius:50%;
+  }
+  .result{
+    margin-top:6px; font-weight:800; color:var(--ok);
+    min-height:28px;
+  }
+
+  /* أزرار “الوجبات/الرموز” الممتعة */
+  .funbar{
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:8px
+  }
+  .funbtn{
+    width:44px; height:44px; border-radius:12px; border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.06); display:grid; place-items:center; cursor:pointer; font-size:22px;
+    transition: transform .12s ease, background .2s;
+  }
+  .funbtn:hover{ transform: translateY(-2px); background:rgba(255,255,255,.12) }
+
+  /* الشريط الجانبي (الإعدادات) */
+  .drawer{
+    position:fixed; top:0; right:0; width: 320px; max-width:100vw; height:100%;
+    background: rgba(13,13,28,.96); color:var(--ink); border-left:1px solid rgba(255,255,255,.08);
+    transform: translateX(100%); transition: transform .25s ease; z-index:20; backdrop-filter: blur(10px);
+    padding:16px;
+  }
+  .drawer.open{ transform: translateX(0) }
+  .rowItem{ display:flex; align-items:center; justify-content:space-between; padding:10px 6px; border-bottom:1px dashed rgba(255,255,255,.08) }
+  .switch{ inline-size:52px; block-size:30px; border-radius:999px; background:rgba(255,255,255,.14); position:relative; cursor:pointer }
+  .switch i{ position:absolute; inset-inline-start:3px; inset-block-start:3px; width:24px; height:24px; background:#fff; border-radius:50%; transition: transform .2s }
+  .switch.on{ background:linear-gradient(90deg, var(--brand2), #00d1b7) }
+  .switch.on i{ transform: translateX(22px) }
+
+  footer{
+    margin:30px 0 20px; text-align:center; color:var(--muted)
+  }
+  .sig{ color:var(--brand); font-weight:900 }
+  .subsig{ font-size:13px; opacity:.85 }
+
+  /* مؤثرات */
+  @keyframes wobble{ 0%,100%{transform:rotate(0)} 25%{transform:rotate(2deg)} 75%{transform:rotate(-2deg)} }
+  .shake{ animation: wobble .4s ease both }
+  .flash{ box-shadow: 0 0 0 9999px rgba(255,255,255,.02) inset, 0 0 40px 10px rgba(255,255,255,.4) !important }
+  .invert{ filter: invert(1) hue-rotate(180deg) }
+
+  .note{ font-size:12px; opacity:.8; margin-top:6px }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<header>
+  <div class="brand">
+    <div class="logo"></div>
+    <div>
+      <div style="font-size:18px">عجلة يونس</div>
+      <div style="font-size:12px; color:var(--muted)">أسماء + تحديات مضحكة بإخراج أنيق</div>
+    </div>
+  </div>
+  <button class="gear" id="openSettings" title="الإعدادات">⚙️</button>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <!-- عمود التحكم والإدخال -->
+    <section class="panel">
+      <h3>🧑‍🤝‍🧑 إدخال الأسماء</h3>
+      <div class="row">
+        <input id="nameInput" type="text" placeholder="اكتب اسم واضغط إضافة (مثال: يونس)" />
+        <button class="btn" id="addName">➕ إضافة</button>
+        <button class="btn ghost" id="addMany">⬇️ لصق قائمة</button>
+      </div>
+      <div class="chips" id="namesChips"></div>
+      <div class="note">تلميح: تقدر تلصق أسماء مفصولة بفواصل/أسطر.</div>
+
+      <hr style="border-color:rgba(255,255,255,.06); margin:14px 0">
+
+      <h3>😂 إعدادات العجلة</h3>
+      <div class="row">
+        <label style="display:block; width:100%">مدة الدوران (ثانية):
+          <input id="spinSecs" type="number" min="1" max="10" value="4" />
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn secondary" id="spinNames">🎯 دوّر عجلة الأسماء</button>
+        <button class="btn" id="spinChallenges" disabled>🎲 دوّر عجلة التحديات</button>
+      </div>
+      <div class="note">لازم أولاً تختار لاعب من عجلة الأسماء، بعدها تتفعل عجلة التحديات.</div>
+
+      <hr style="border-color:rgba(255,255,255,.06); margin:14px 0">
+
+      <h3>🍔 زرارات مرِحة (لا تغيّر اللعب)</h3>
+      <div class="funbar">
+        <button class="funbtn" title="بوق مهرج" data-fx="horn">🤡</button>
+        <button class="funbtn" title="بُوب!" data-fx="pop">🍟</button>
+        <button class="funbtn" title="قصاصات ملوّنة" data-fx="confetti">🍬</button>
+        <button class="funbtn" title="قلب الشاشة ألوان" data-fx="invert">🍭</button>
+        <button class="funbtn" title="هزّة خفيفة" data-fx="shake">🍕</button>
+      </div>
+    </section>
+
+    <!-- عمود العجلات -->
+    <section class="stage">
+      <!-- عجلة الأسماء -->
+      <div class="wheelCard">
+        <div class="wheelTitle">عجلة الأسماء</div>
+        <div class="wheelBox" id="wheelNamesBox">
+          <div class="pointer"></div>
+          <div class="wheel" id="wheelNames"></div>
+        </div>
+        <div id="resultName" class="result"></div>
+      </div>
+
+      <!-- عجلة التحديات -->
+      <div class="wheelCard">
+        <div class="wheelTitle">عجلة التحديات</div>
+        <div class="wheelBox" id="wheelChallengesBox">
+          <div class="pointer"></div>
+          <div class="wheel" id="wheelChallenges"></div>
+        </div>
+        <div id="resultChallenge" class="result"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <div class="sig">صُنع بحب من <span class="sig">يونس</span> 🧪✨</div>
+    <div class="subsig">واجهة خفيفة، أصوات مضحكة، ومتعة جماعية… استمتعوا! 😎</div>
+  </footer>
+</main>
+
+<!-- درج الإعدادات -->
+<aside class="drawer" id="drawer">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+    <h3 style="margin:0; color:var(--brand)">⚙️ الإعدادات</h3>
+    <button class="gear" id="closeSettings">✖️</button>
+  </div>
+
+  <div class="rowItem">
+    <div>أصوات مضحكة</div>
+    <div class="switch on" id="swSound"><i></i></div>
+  </div>
+  <div class="rowItem">
+    <div>قصاصات عند الاختيار</div>
+    <div class="switch on" id="swConfetti"><i></i></div>
+  </div>
+  <div class="rowItem">
+    <div>اهتزاز (إن مدعوم)</div>
+    <div class="switch on" id="swVibrate"><i></i></div>
+  </div>
+  <div class="rowItem">
+    <div>سِمة ألوان “نيون”</div>
+    <div class="switch on" id="swNeon"><i></i></div>
+  </div>
+
+  <div style="margin-top:14px; font-size:12px; color:var(--muted)">
+    تذكير: الأزرار الحلوة (🍟🤡🍬🍭🍕) تأثيراتها بصرية فقط، ما تغير نتائج العجلات.
+  </div>
+</aside>
+
+<script>
+/* =========================
+   حالة عامّة + مساعدات
+========================= */
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+
+const state = {
+  names: [],
+  chosenName: null,
+  spinSecs: 4,
+  soundOn: true,
+  confettiOn: true,
+  vibrateOn: true,
+  neonOn: true,
+};
+
+const wheelNames = $("#wheelNames");
+const wheelChallenges = $("#wheelChallenges");
+const boxNames = $("#wheelNamesBox");
+const boxChallenges = $("#wheelChallengesBox");
+
+/* =========================
+   مولّد الأصوات (WebAudio)
+========================= */
+let ACTX;
+function ctx(){ if(!ACTX) ACTX = new (window.AudioContext||window.webkitAudioContext)(); return ACTX; }
+function playClick(){
+  if(!state.soundOn) return;
+  const ac = ctx();
+  const o = ac.createOscillator();
+  const g = ac.createGain();
+  o.type="square"; o.frequency.value = 420;
+  g.gain.value=0.0001; g.gain.exponentialRampToValueAtTime(0.25, ac.currentTime+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime+0.13);
+  o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime+0.14);
+}
+function clownHorn(){
+  if(!state.soundOn) return;
+  const ac = ctx();
+  const g = ac.createGain(); g.connect(ac.destination); g.gain.value=0.15;
+  const seq = [330,260,220].concat([260,330]);
+  seq.forEach((f,i)=>{
+    const o = ac.createOscillator(); o.type="sawtooth"; o.frequency.value=f;
+    const gg = ac.createGain(); gg.gain.value=0.0001;
+    o.connect(gg).connect(g);
+    const t = ac.currentTime + i*0.08;
+    gg.gain.exponentialRampToValueAtTime(0.22, t+0.02);
+    gg.gain.exponentialRampToValueAtTime(0.0001, t+0.07);
+    o.start(t); o.stop(t+0.08);
+  });
+}
+function popSound(){
+  if(!state.soundOn) return;
+  const ac = ctx();
+  const o = ac.createOscillator(); const g=ac.createGain();
+  o.type="triangle"; o.frequency.setValueAtTime(600, ac.currentTime);
+  o.frequency.exponentialRampToValueAtTime(1200, ac.currentTime+0.05);
+  g.gain.value=0.0001; g.gain.exponentialRampToValueAtTime(0.28, ac.currentTime+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime+0.12);
+  o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime+0.13);
+}
+function winJingle(){
+  if(!state.soundOn) return;
+  const ac = ctx();
+  [523,659,784,988].forEach((f,i)=>{
+    const o=ac.createOscillator(), g=ac.createGain();
+    o.type="triangle"; o.frequency.value=f; g.gain.value=0.12;
+    o.connect(g).connect(ac.destination);
+    const t=ac.currentTime+i*0.12; o.start(t); o.stop(t+0.22);
+  });
+}
+
+/* =========================
+   مؤثرات مرحة
+========================= */
+function vibrate(ms=80){ if(state.vibrateOn && navigator.vibrate) navigator.vibrate(ms); }
+function flash(el){ el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"), 200); }
+function shake(el){ el.classList.add("shake"); setTimeout(()=>el.classList.remove("shake"), 420); }
+function toggleInvert(){ document.body.classList.toggle("invert"); setTimeout(()=>document.body.classList.toggle("invert"), 1500); }
+
+// قصاصات بسيطة (إيموجي)
+function burstConfetti(x = window.innerWidth/2, y = 140){
+  if(!state.confettiOn) return;
+  const N = 24;
+  for(let i=0;i<N;i++){
+    const s = document.createElement("div");
+    s.textContent = ["🎉","✨","🍬","💥","🎊"][Math.floor(Math.random()*5)];
+    s.style.position="fixed";
+    s.style.left = x+"px"; s.style.top = y+"px";
+    s.style.zIndex = 50; s.style.pointerEvents="none";
+    s.style.transition = "transform .9s ease, opacity .9s ease";
+    document.body.appendChild(s);
+    const a = (Math.PI*2) * (i/N);
+    const r = 120 + Math.random()*120;
+    requestAnimationFrame(()=>{
+      s.style.transform = `translate(${Math.cos(a)*r}px, ${Math.sin(a)*r}px) rotate(${(Math.random()*720-360)}deg)`;
+      s.style.opacity = 0;
+    });
+    setTimeout(()=> document.body.removeChild(s), 950);
+  }
+}
+
+/* =========================
+   بناء العجلة (Div sectors)
+========================= */
+function buildWheel(container, labels, showText=true){
+  container.innerHTML = "";
+  if(labels.length===0){
+    // دائرة زخرفية فقط
+    const placeholder = document.createElement("div");
+    placeholder.className = "sector";
+    placeholder.style.setProperty("--start", 0);
+    placeholder.style.transform = `rotate(0deg)`;
+    placeholder.innerHTML = "<div style='opacity:.5'>أضف عناصر…</div>";
+    container.appendChild(placeholder);
+    return;
+  }
+  const n = labels.length;
+  for(let i=0;i<n;i++){
+    const ang = 360/n;
+    const s = document.createElement("div");
+    s.className = "sector";
+    s.style.setProperty("--start", i*ang);
+    s.style.transform = `rotate(${i*ang}deg)`;
+    // نعرض النص/الإيموجي بشكل مقروء (نثبت عكس دوران)
+    const inner = document.createElement("div");
+    inner.style.transform = `rotate(${-i*ang}deg)`;
+    inner.style.width="70%";
+    inner.style.userSelect="none";
+    inner.style.pointerEvents="none";
+    inner.style.whiteSpace="nowrap";
+    if(showText){
+      inner.textContent = labels[i];
+    }else{
+      inner.textContent = ["🎯","😂","🔥","🤪","🎮","🎈","🃏","💥"][i%8];
+    }
+    s.appendChild(inner);
+    container.appendChild(s);
+  }
+}
+
+/* =========================
+   سبين عام + تحديد الفائز
+========================= */
+function spinWheel(boxEl, items, onDone, showText=true){
+  if(items.length===0){ alert("أضف عناصر أولاً"); return; }
+  const wheelEl = boxEl.querySelector(".wheel");
+  buildWheel(wheelEl, items, showText);
+
+  // دوران عشوائي يحط المؤشر على عنصر
+  const n = items.length;
+  const sector = 360/n;
+  // هدف عشوائي
+  const idx = Math.floor(Math.random()*n);
+  // نوقف بحيث المؤشر العلوي يصادف وسط القطاع
+  const targetDeg = 360 - (idx*sector + sector/2);
+  // نضيف لفّات كاملة
+  const spins = 4 + Math.floor(Math.random()*3); // 4 إلى 6 لفّات
+  const totalDeg = spins*360 + targetDeg + (Math.random()*sector*0.2 - sector*0.1);
+
+  // أنيميشن
+  playClick(); vibrate(30);
+  wheelEl.style.transition = `transform ${state.spinSecs}s cubic-bezier(.1,.8,.1,1)`;
+  wheelEl.style.transform = `rotate(${totalDeg}deg)`;
+  boxEl.classList.add("flash");
+
+  // نبضات صوت أثناء الدوران
+  let ticks=0;
+  const tickInt = setInterval(()=>{ popSound(); ticks++; if(ticks>10) clearInterval(tickInt) }, Math.max(90, state.spinSecs*1000/10));
+
+  setTimeout(()=>{
+    boxEl.classList.remove("flash");
+    wheelEl.style.transition = ""; // نرجع فوري للزاوية الناقصة لو لزم
+    // نتيجة
+    onDone(idx, items[idx]);
+    winJingle(); burstConfetti(boxEl.getBoundingClientRect().left + boxEl.offsetWidth/2, boxEl.getBoundingClientRect().top + 20);
+  }, state.spinSecs*1000 + 40);
+}
+
+/* =========================
+   قائمة التحديات (100+)
+========================= */
+const CHALLENGES = [
+"قل جملة كاملة بدون فتح فمك 😬",
+"تكلم همسًا لمدة 30 ثانية",
+"إضحك بدون ما تبين أسنانك 😂",
+"قل ألفباء بالعكس بسرعة",
+"قُل 'أنا باذنجان' ثلاث مرات بجديّة تامة",
+"امشِ مكانك كأنك على القمر 🌕",
+"قُل بيت شعر من خيالك الآن",
+"صفّر لحنًا تعرفه (بدون كلام) 🎶",
+"قُل نكتة من سطر واحد",
+"قل 'ق' بدل كل 'ك' لمدة جولة",
+"إعمل صوت روبوت وانت تتكلم 🤖",
+"تصرّف كأن هاتفك رنّ الآن وردّ عليه",
+"قل 'لا أستطيع التوقف عن الضحك' وأنت تحاول ما تضحك",
+"امدح نفسك بثلاث صفات خارقة 💪",
+"قل اسمك وكأنك مذيع رياضي",
+"اعمل إعلان خيالي لمنتج غير موجود",
+"احكي ذكرياتك مع كرسي الصف الأول 🪑",
+"اختر لاعبًا وقل له لقبًا لطيفًا",
+"تكلم بلهجة ليست لهجتك",
+"قل جملة وكل كلمة تبدأ بنفس الحرف",
+"اقرأ جملة بصوت شرطي غاضب 👮‍♂️",
+"أعد تمثيل لحظة هدف عالمي بدون كرة",
+"قل 'أنا جائع' بعشر طرق مختلفة 🍔",
+"عرفنا على حذائك كأنه شخصية",
+"اعمل صوت سيارة سباق لمدة 5 ثواني 🏎️",
+"قل حكمة غريبة تبدو عميقة",
+"اتكلم كأنك ساحر يلقي تعويذة 🪄",
+"غنّي اسم لاعب تحبه",
+"إعمل حركة فوز بأسلوب بطيء 🎥",
+"قل كلمة 'موز' كل ما تقول اسم أحد طوال جولة 🍌",
+"اعمل مقابلة قصيرة مع نفسك",
+"حاول تقنعنا أن الجدار شفاف",
+"قل اليوم والتاريخ وكأنك مذيع نشرة",
+"اعمل إعلان طقس مبالغ فيه ⛈️",
+"قل 'آسف' بشكل درامي جدًا",
+"مثّل أنك روبوت فيه عطل",
+"قل جملة بدون حرف الألف",
+"اختر لاعبًا وقل له لقب مضحك محترم",
+"قل مثل شعبي وبدّل كلمة بكلمة موز",
+"حاول تنطق أسرع جملة صعبة تختارها",
+"اعمل رنة إشعار من اختراعك 📳",
+"اتخيل نفسك بطل خارق وعرّف قواك",
+"قل خبر عاجل خرافي الآن",
+"صف نكهة ماء الشرب بطريقة شاعرية",
+"قل اسم بلد وأتبعه بصوت الحيوان الوطني (اختر أيًا 😅)",
+"تكلم وكأنك معلّق على سباق نمل 🐜",
+"قل 'واو' بعشر تعبيرات مختلفة",
+"اعمل صوت سيف ليزر ⚔️",
+"قل 5 كلمات إنجليزية تنطقها بالعربية",
+"قل جملة مقلوبة المعنى ثم أصلحها",
+"اعمل مؤتمر صحفي وتجاوب سؤالًا من عقلك",
+"اختر شيئًا قريبًا وامدحه بصدق",
+"قل 'لا تعليق' بثلاث طرق مختلفة",
+"اعمل دَبكة كرسي (وأنت جالس 😄)",
+"اختم كلامك بـ 'يا سلام' لمدة جولة",
+"احكي موقف محرج لكن انتهى بسعادة",
+"قل اسم أكلة وامدحها وكأنها فازت بجائزة",
+"قل 'ألو' وكأنك استقبلت مكالمة من الفضاء 👽",
+"تكلم وكأنك في إعلان معجون أسنان 😁",
+"قل اسم لون واخترع له نكهة",
+"صف صوت الهدوء كأنه شيء ملموس",
+"قل عنوان فيلم واخترع قصة له",
+"قل عبارة تحفيزية كأنك مدرّب",
+"امدح خصمك في ثلاث كلمات صافية",
+"اخترع شعارًا لنفسك وردده",
+"قل 'أنا الأسطورة' بنبرة خجولة ثم واثقة",
+"اعمل تحية عسكرية لكوب الماء 🫡",
+"تكلم كأنك مترجم فوري متسرّع",
+"قل كلمة مخترعة واشرح معناها",
+"قل بيتين راب مرتجلين 🎤",
+"اعمل نشرة مرور عن حركة الكراسي",
+"قل جملة وكأن المايك بعيد ثم قريب 🎙️",
+"قل 'أنا هادئ جدًا' وأنت تتصنّع العصبية",
+"جرّب لهجة طفل فرحان جدًا 👶",
+"اعمل إعلان تخفيضات على… الهواء",
+"قل وصفة شاي بأسلوب درامي",
+"اختر اسم كوكب جديد وعرّفنا عليه",
+"قل 'ممنوع الضحك' بطريقة تُضحك",
+"أعطنا درسًا سريعًا في الصمت… لمدة 5 ثوان 😶",
+"قل نشيدًا من كلمة واحدة مكررة",
+"قل اسمك بالمقلوب ثم عادي",
+"تكلم كأنك في فيلم وثائقي عن نفسك",
+"قل 3 معلومات صحيحة  وواحدة تخمين",
+"صف رائحة لون أزرق (تخيل!)",
+"اعمل تحية لـ'عجلة يونس' 👑",
+"اخترع جائزة وأعطها لشخص بجانبك",
+"قل جملة وكأنك تحت الماء 🫧",
+"مثل مشهد لقاء مع بطريق 🐧",
+"قل نكتة من غير ما تضحك (تحدي)",
+"اخترع إيموجي بصوتك فقط",
+"قل حكمة ينفع نطبعها على قميص",
+"اعمل موجة جماهير (باليدين فقط)",
+"تكلم وكأنك خرّاط كلمات شاعرية",
+"قل اسم فريقك المفضل كأنك مدرّب",
+"اعمل صفارة حكم ثم بطاقة صفراء لشيء عشوائي 🟨",
+"قل 'خلاص' بأربع معاني مختلفة",
+"اعمل صوت باب قديم ثم باب أوتوماتيك",
+"اخترع اسم شارع جديد في مدينتك",
+"تخيل أن الكرسي يسألك سؤالًا ورد عليه",
+"قل 'مع السلامة' بخمس نبرات",
+"أعد تقليد ضحكة صديق (بدون إساءة)",
+"اعمل إعلان لبطارية لا تنفد",
+"قل كلمات تبدأ بحرف الراء فقط لمدة 7 ثوان",
+"اعمل صوت دخول لاعب إلى الملعب مع الجمهور",
+"قل اسم فاكهة وكأنها شخصية تاريخية",
+"تكلم ببطء شديد ثم بسرعة ثم طبيعي",
+"مثّل أنك مذيع نتیجه ’العجلة’ الآن",
+"قل أمنية مستحيلة كأنها ستحصل اليوم",
+"عرّف عن يومك بثلاثة أصوات فقط",
+"اخترع اسم آلة موسيقية وقل كيف صوتها",
+"قل 'أحتاج قهوة' بخمس مشاعر مختلفة ☕",
+"اعمل موجز أخبار طريفة مدتها 10 ثوان",
+"قل شيء جميل عن اليمين ثم اليسار",
+"قل ’اسمك’ على وزن أغنية (بدون لحن معروف)",
+"تظاهر أنك نِسيت الكلام واستبدله بإيموجي (لفظًا) 😂",
+"اخترع تحديًا جديدًا للعجلة الآن",
+"اختم بـ'شكراً… مع تحيات يونس' 👑"
+];
+
+/* =========================
+   DOM: إدخال الأسماء
+========================= */
+const nameInput = $("#nameInput");
+const chipsEl = $("#namesChips");
+$("#addName").onclick = ()=>{
+  const v = nameInput.value.trim();
+  if(!v) return;
+  state.names.push(v);
+  nameInput.value="";
+  renderNames();
+  playClick();
+};
+$("#addMany").onclick = ()=>{
+  const txt = prompt("ألصق هنا أسماء مفصولة بأسطر أو بفواصل:");
+  if(!txt) return;
+  txt.split(/[\n,]+/).map(s=>s.trim()).filter(Boolean).forEach(n=> state.names.push(n));
+  renderNames(); playClick();
+};
+function renderNames(){
+  chipsEl.innerHTML = "";
+  state.names.forEach((n,i)=>{
+    const c = document.createElement("div");
+    c.className = "chip";
+    c.innerHTML = `${n} <span style="opacity:.6; cursor:pointer" title="حذف" data-i="${i}">✖</span>`;
+    chipsEl.appendChild(c);
+    c.querySelector("span").onclick = (e)=>{ state.names.splice(i,1); renderNames(); playClick(); };
+  });
+  buildWheel(wheelNames, state.names.length?state.names:["أضف أسماء"], true);
+}
+
+/* =========================
+   أزرار السبِن
+========================= */
+$("#spinSecs").addEventListener("change", e=>{
+  state.spinSecs = Math.max(1, Math.min(10, parseInt(e.target.value||4,10)));
+});
+
+$("#spinNames").onclick = ()=>{
+  if(state.names.length<1){ alert("أضف اسمًا واحدًا على الأقل."); return; }
+  spinWheel(boxNames, state.names, (idx, val)=>{
+    state.chosenName = val;
+    $("#resultName").textContent = `🎯 الدور على: ${val}`;
+    $("#spinChallenges").disabled = false;
+  }, true);
+};
+
+$("#spinChallenges").onclick = ()=>{
+  spinWheel(boxChallenges, CHALLENGES, (idx, val)=>{
+    $("#resultChallenge").textContent = `🎲 التحدي: ${val}`;
+  }, false);
+};
+
+/* =========================
+   إعدادات الدرج
+========================= */
+const drawer = $("#drawer");
+$("#openSettings").onclick = ()=>{ drawer.classList.add("open"); playClick(); };
+$("#closeSettings").onclick = ()=>{ drawer.classList.remove("open"); playClick(); };
+
+function toggleSwitch(swEl, key){
+  swEl.classList.toggle("on");
+  state[key] = swEl.classList.contains("on");
+  playClick();
+  if(key==="neonOn"){
+    document.documentElement.style.setProperty('--bg1', state.neonOn ? '#0f1023' : '#0e1117');
+    document.documentElement.style.setProperty('--bg2', state.neonOn ? '#191b3a' : '#111827');
+    document.documentElement.style.setProperty('--brand', state.neonOn ? '#ffdb3b' : '#a6e3a1');
+    document.documentElement.style.setProperty('--brand2', state.neonOn ? '#00f5d4' : '#74c7ec');
+    document.documentElement.style.setProperty('--accent', state.neonOn ? '#ff7eb6' : '#f38ba8');
+  }
+}
+$("#swSound").onclick = ()=> toggleSwitch($("#swSound"), "soundOn");
+$("#swConfetti").onclick = ()=> toggleSwitch($("#swConfetti"), "confettiOn");
+$("#swVibrate").onclick = ()=> toggleSwitch($("#swVibrate"), "vibrateOn");
+$("#swNeon").onclick = ()=> toggleSwitch($("#swNeon"), "neonOn");
+
+/* =========================
+   أزرار المتعة (لا تؤثر على اللعب)
+========================= */
+$$(".funbtn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const fx = btn.dataset.fx;
+    if(fx==="horn"){ clownHorn(); shake(btn); }
+    if(fx==="pop"){ popSound(); flash(btn); }
+    if(fx==="confetti"){ burstConfetti(btn.getBoundingClientRect().left, btn.getBoundingClientRect().top); }
+    if(fx==="invert"){ toggleInvert(); }
+    if(fx==="shake"){ vibrate(100); shake($("main")); }
+  });
+});
+
+/* =========================
+   تهيئة أولية
+========================= */
+renderNames();
+buildWheel(wheelChallenges, ["🎯","😂","🔥","🤪","🎮","🎈","🃏","💥"], false);
+</script>
+</body>
+</html>
+<div style="text-align:center; margin-top:20px; font-family:Comic Sans MS, cursive; color:#ff0066; font-size:18px;">
+  👑 صنع بإبداع <b>يونس</b> – الأيقونة التي لا تُكرر 😂🔥
+</div>
+<div style="text-align:center; margin-top:30px; font-family:Comic Sans MS, cursive; color:#ff0066; font-size:18px;">
+  <img src="https://i.postimg.cc/L47y7tkr/20241004-191342.jpg" alt="صورة يونس" style="max-width:200px; border-radius:20px; box-shadow:0 0 15px rgba(0,0,0,0.3); margin-bottom:15px;">
+  <div>👑 صنع بإبداع <b>يونس</b> – الأيقونة التي لا تُكرر 😂🔥</div>
+  <div style="margin-top:10px; color:#0099ff; font-size:16px;">📿 كي تصلّو ادعولي 🌙💙</div>
+</div>
